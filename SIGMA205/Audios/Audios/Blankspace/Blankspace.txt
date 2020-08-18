@@ -1,0 +1,5 @@
+min = 92,59
+max = 100
+mean = 96,53
+
+attention à l'enregistrement de Mariana

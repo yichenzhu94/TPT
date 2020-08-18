@@ -1,0 +1,327 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>tp_to</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-01-11"><meta name="DC.source" content="tp_to.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">TP compression d'image</a></li><li><a href="#2">Charger une image</a></li><li><a href="#3">Calcul TO orthogonale, 4 moments nuls (MN), affichage</a></li><li><a href="#4">Effet de la p&eacute;riodisation</a></li><li><a href="#5">Calcul gain de codage</a></li><li><a href="#6">Observation des histogrammes</a></li><li><a href="#7">Variation du gain de codage</a></li><li><a href="#8">Quantification avec TO et comparaison avec DCT</a></li><li><a href="#10">Comparaison TO/ TCD</a></li><li><a href="#11">PSNRs</a></li><li><a href="#12">Diff&eacute;rence entre les 2 PSNR</a></li></ul></div><h2>TP compression d'image<a name="1"></a></h2><pre class="codeinput">close <span class="string">all</span>;   clear
+</pre><h2>Charger une image<a name="2"></a></h2><pre class="codeinput">x= double(imread(<span class="string">'lena.pgm'</span>));
+bpp = 8; <span class="comment">% Nombre de bits per pixel de l'image originale</span>
+dyn = 2^bpp; <span class="comment">% Dynamique de l'image originale</span>
+</pre><h2>Calcul TO orthogonale, 4 moments nuls (MN), affichage<a name="3"></a></h2><pre class="codeinput"><span class="comment">% Cr&eacute;ation du filtre. Le deuxi&egrave;me param&egrave;tre est deux fois le nombre de MN</span>
+qmf = MakeONFilter(<span class="string">'Daubechies'</span>, 16);
+
+<span class="comment">% Calcul de la transform&eacute;e en ondelette discrete (p&eacute;riodisation)</span>
+nDecLev = 6;
+imSizeLog = log2(size(x,1));
+X_TO = FWT2_PO(x,imSizeLog-nDecLev,qmf);
+
+<span class="comment">% Affichage</span>
+wt_view(X_TO, nDecLev);
+title(sprintf(<span class="string">'Decomposition CQF sur %d niveaux, remise &agrave; l''&eacute;chelle des sous-bandes'</span>,nDecLev));
+
+<span class="comment">% Affichage avec &eacute;chelle unique</span>
+figure; imagesc(log10(abs(X_TO)+1)); axis <span class="string">image</span>; axis <span class="string">off</span>; colorbar;
+title(sprintf(<span class="string">'Decomposition CQF sur %d niveaux, &eacute;chelle log unique'</span>,nDecLev));
+</pre><img vspace="5" hspace="5" src="tp_to_01.png" alt=""> <img vspace="5" hspace="5" src="tp_to_02.png" alt=""> <h2>Effet de la p&eacute;riodisation<a name="4"></a></h2><p>On observe des effets de bord, car l&#8217;image n&#8217;a pas &eacute;t&eacute; sym&eacute;tris&eacute;e avant d&#8217;&ecirc;tre p&eacute;riodis&eacute;e.</p><h2>Calcul gain de codage<a name="5"></a></h2><pre class="codeinput"><span class="comment">% La taille (cot&eacute;) du bloc est &eacute;gale &agrave; celle de la sousbande LL</span>
+<span class="comment">% L'image et tous les blocs sont carr&eacute;s</span>
+blockSizeWT = 2^(imSizeLog-nDecLev);
+
+<span class="comment">% Le i-eme bloc contient toutes les r&eacute;alisations de la variable X_i</span>
+<span class="comment">% Le nobmre de blocs est la dimension du vecteur X</span>
+nBlocks = 2^(2*nDecLev);
+
+vars = zeros(1,nBlocks); <span class="comment">% Vecteur o&ugrave; stocker les variances des blocs</span>
+iVar=0; <span class="comment">% Index pour parcourir le vecteur des variances</span>
+
+<span class="comment">% Boucle sur tous les blocs</span>
+<span class="keyword">for</span> c=1:blockSizeWT:2^imSizeLog
+    <span class="keyword">for</span> r=1:blockSizeWT:2^imSizeLog
+        iVar=iVar+1;
+
+        <span class="comment">% Extraction du bloc avec premier coefficient en (r,c)</span>
+        block = X_TO(r:r+blockSizeWT-1,c:c+blockSizeWT-1);
+
+        <span class="comment">% D&eacute;commenter pour afficher les histogrammes des blocs</span>
+<span class="comment">%         figure(3);</span>
+<span class="comment">%         h=hist(block(:),100);</span>
+<span class="comment">%         bar(h);</span>
+<span class="comment">%         title(sprintf('Histogramme du bloc en %d,%d',r,c));</span>
+<span class="comment">%         set(gcf,'Position', [30  400   600   500]);</span>
+<span class="comment">%         figure(4);</span>
+<span class="comment">%         imagesc(block);</span>
+<span class="comment">%         title(sprintf('Bloc en %d,%d',r,c));</span>
+<span class="comment">%         set(gcf,'Position', [650  400   600   500]);</span>
+<span class="comment">%         pause</span>
+<span class="comment">%</span>
+        <span class="comment">% Calcul de la variance</span>
+        vars(iVar) = var(block(:));
+
+
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">% Affichage des variances en echelle log</span>
+figure;
+imagesc(reshape(log10(vars),2^nDecLev,2^nDecLev)) ; colorbar;
+title(<span class="string">'Log_{10} des variances par bloc de coefficients'</span>)
+axis <span class="string">image</span>;
+
+<span class="comment">% Calcul du gain de codage</span>
+CG = mean(vars) ./ exp(mean(log(vars)));
+fprintf(<span class="string">'Coding gain: %5.2f dB\n'</span>, 10*log10(CG))
+</pre><pre class="codeoutput">Coding gain: 20.52 dB
+</pre><img vspace="5" hspace="5" src="tp_to_03.png" alt=""> <h2>Observation des histogrammes<a name="6"></a></h2><p>On voit quelques histogrammes qui peuvent correspondre &agrave; une distribution connue (ce n&#8217;est pas le cas pour tous les histogrammes). Mais d&#8217;apr&egrave;s ce qu&#8217;on voit on constate qu&#8217;il est raisonnable de penser &agrave; mod&eacute;liser les coefficients d&#8217;un bloc comme r&eacute;alisations d&#8217;une m&ecirc;me variable al&eacute;atoire.</p><h2>Variation du gain de codage<a name="7"></a></h2><p>Le gain de codage augmente quand on a plus niveaux de d&eacute;composition. Si on utilise 6 niveaux, on obtient 20.24 dB. En utilisant un moment nul de plus, on obtient un gain de 19.50 dB, ce qui montre qu&#8217;on augmente aussi le gain en augmentant le nombre des moments nuls. Utiliser pluse niveaux de d&eacute;composition et un filtre avec plus de moments nuls permet obtenir une r&eacute;pr&eacute;sentation plus &eacute;fficace de l'image, ce qui conduit &agrave; un gain de codage plus &eacute;l&eacute;v&eacute;e.</p><h2>Quantification avec TO et comparaison avec DCT<a name="8"></a></h2><pre class="codeinput">qmf = MakeONFilter(<span class="string">'Daubechies'</span>,8);
+X_TO = FWT2_PO(x,imSizeLog-nDecLev,qmf);
+blockSizeDCT = 16;
+T_DCT = blkproc(x, [blockSizeDCT blockSizeDCT], @dct2);
+
+DELTA= 128:-2:1;
+R_TO = zeros(size(DELTA));    R_DCT = R_TO;
+D_TO = zeros(size(DELTA));    D_DCT = D_TO;
+PSNR_TO = zeros(size(DELTA)); PSNR_DCT = PSNR_TO;
+<span class="keyword">for</span> iDelta = 1:numel(DELTA),
+    delta = DELTA(iDelta);
+
+    <span class="comment">% TO</span>
+    TOQ = qu_dz(X_TO, delta) ;
+    h = hist(TOQ(:), min(TOQ(:)):max(TOQ(:)));
+    pmf = h/sum(h);
+    R_TO(iDelta) = pmfEntr(pmf);
+    D_TO(iDelta)=  mean( (X_TO(:)-TOQ(:)).^2  );
+    PSNR_TO(iDelta) = 10*log10(dyn^2/ D_TO(iDelta));
+
+    <span class="comment">% TCD</span>
+    TCDQ = qu_dz(T_DCT, delta) ;
+    h = hist(TCDQ(:), min(TCDQ(:)):max(TCDQ(:)));
+    pmf = h/sum(h);
+    R_DCT(iDelta) = pmfEntr(pmf);
+    D_DCT(iDelta)=  mean( (T_DCT(:)-TCDQ(:)).^2   );
+    PSNR_DCT(iDelta) = 10*log10(dyn^2/ D_DCT(iDelta));
+<span class="keyword">end</span>
+</pre><pre class="codeinput">figure; plot(R_DCT,PSNR_DCT, R_TO,PSNR_TO, <span class="string">'linewidth'</span>, 2)
+xlabel(<span class="string">'Rate - bpp'</span>); ylabel(<span class="string">'PSNR - dB'</span>);
+legend(<span class="string">'TDC'</span>,<span class="string">'TO'</span>,<span class="string">'Location'</span>, <span class="string">'SouthEast'</span>);
+</pre><img vspace="5" hspace="5" src="tp_to_04.png" alt=""> <h2>Comparaison TO/ TCD<a name="10"></a></h2><p>La performance des deux transform&eacute;es est similaire, mais le PSNR obtenu avec la transform&eacute;e TDC est un peu plus &eacute;l&eacute;v&eacute; que celui obtenu avec la transform&eacute;e en ondelettes quand on augmente le bpp (m&ecirc;me en augmentant le nombre de moments nuls du filtre et le nombre de niveaux de d&eacute;composition).</p><h2>PSNRs<a name="11"></a></h2><pre class="codeinput">nPoints = 50;
+r = linspace(max([min(R_DCT),min(R_TO)]), min([max(R_DCT),max(R_TO)]), nPoints);
+p1 = interp1(R_DCT,PSNR_DCT,r);
+p2 = interp1(R_TO,PSNR_TO,r);
+figure; plot(r, p2-p1, <span class="string">'linewidth'</span>, 2)
+xlabel(<span class="string">'Rate - bpp'</span>); ylabel(<span class="string">'\Delta PSNR - dB'</span>);  legend(<span class="string">'PSNR_{TO}-PSNR_{TCD}'</span>);
+line ([0 4],[0 0]);
+axis([0 max(r)*1.05 min(p2-p1)-0.02 max(p2-p1)+0.02])
+</pre><img vspace="5" hspace="5" src="tp_to_05.png" alt=""> <h2>Diff&eacute;rence entre les 2 PSNR<a name="12"></a></h2><p>On cr&eacute;e un vecteur r avec 50 points &eacute;galement espac&eacute;s entre le maximum des minimums et le minimum des maximums de R_DCT et R_TO pour interpoler les PSNR (cela c'est pour qu'il existe pour des valeurs de bit rate pour les deux transform&eacute;es &agrave; la fois). Quand on calcule la diff&eacute;rence, on constate qu'elle tend vers zero quand le bpp augmente.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% TP compression d'image
+close all;   clear
+
+%% Charger une image 
+x= double(imread('lena.pgm'));
+bpp = 8; % Nombre de bits per pixel de l'image originale
+dyn = 2^bpp; % Dynamique de l'image originale
+
+
+%% Calcul TO orthogonale, 4 moments nuls (MN), affichage
+
+% Création du filtre. Le deuxième paramètre est deux fois le nombre de MN
+qmf = MakeONFilter('Daubechies', 16);
+
+% Calcul de la transformée en ondelette discrete (périodisation)
+nDecLev = 6;
+imSizeLog = log2(size(x,1));
+X_TO = FWT2_PO(x,imSizeLog-nDecLev,qmf);
+
+% Affichage
+wt_view(X_TO, nDecLev);
+title(sprintf('Decomposition CQF sur %d niveaux, remise à l''échelle des sous-bandes',nDecLev));
+
+% Affichage avec échelle unique
+figure; imagesc(log10(abs(X_TO)+1)); axis image; axis off; colorbar;
+title(sprintf('Decomposition CQF sur %d niveaux, échelle log unique',nDecLev));
+
+%% Effet de la périodisation
+% On observe des effets de bord, car l’image n’a pas été symétrisée avant
+% d’être périodisée. 
+
+%% Calcul gain de codage
+
+% La taille (coté) du bloc est égale à celle de la sousbande LL
+% L'image et tous les blocs sont carrés
+blockSizeWT = 2^(imSizeLog-nDecLev); 
+
+% Le i-eme bloc contient toutes les réalisations de la variable X_i
+% Le nobmre de blocs est la dimension du vecteur X
+nBlocks = 2^(2*nDecLev); 
+
+vars = zeros(1,nBlocks); % Vecteur où stocker les variances des blocs
+iVar=0; % Index pour parcourir le vecteur des variances
+
+% Boucle sur tous les blocs
+for c=1:blockSizeWT:2^imSizeLog
+    for r=1:blockSizeWT:2^imSizeLog
+        iVar=iVar+1;
+        
+        % Extraction du bloc avec premier coefficient en (r,c)
+        block = X_TO(r:r+blockSizeWT-1,c:c+blockSizeWT-1);
+        
+        % Décommenter pour afficher les histogrammes des blocs
+%         figure(3); 
+%         h=hist(block(:),100);
+%         bar(h);  
+%         title(sprintf('Histogramme du bloc en %d,%d',r,c));
+%         set(gcf,'Position', [30  400   600   500]); 
+%         figure(4);
+%         imagesc(block);
+%         title(sprintf('Bloc en %d,%d',r,c));    
+%         set(gcf,'Position', [650  400   600   500]); 
+%         pause        
+%         
+        % Calcul de la variance
+        vars(iVar) = var(block(:));
+        
+
+    end
+end
+
+% Affichage des variances en echelle log
+figure; 
+imagesc(reshape(log10(vars),2^nDecLev,2^nDecLev)) ; colorbar;
+title('Log_{10} des variances par bloc de coefficients')
+axis image;
+
+% Calcul du gain de codage
+CG = mean(vars) ./ exp(mean(log(vars)));
+fprintf('Coding gain: %5.2f dB\n', 10*log10(CG))
+
+%% Observation des histogrammes
+% On voit quelques histogrammes qui peuvent correspondre à une distribution connue (ce n’est pas le cas pour tous les histogrammes). 
+% Mais d’après ce qu’on voit on constate qu’il est raisonnable de penser à modéliser les coefficients d’un bloc comme réalisations d’une même variable aléatoire. 
+%% Variation du gain de codage 
+% Le gain de codage augmente quand on a plus niveaux de décomposition. Si on utilise 6 niveaux, on obtient 20.24 dB.  
+% En utilisant un moment nul de plus, on obtient un gain de 19.50 dB, ce qui montre qu’on augmente aussi le gain en augmentant le nombre des moments nuls.
+% Utiliser pluse niveaux de décomposition et un filtre avec plus de moments
+% nuls permet obtenir une réprésentation plus éfficace de l'image, ce qui
+% conduit à un gain de codage plus élévée. 
+
+%% Quantification avec TO et comparaison avec DCT
+
+qmf = MakeONFilter('Daubechies',8);
+X_TO = FWT2_PO(x,imSizeLog-nDecLev,qmf);
+blockSizeDCT = 16;
+T_DCT = blkproc(x, [blockSizeDCT blockSizeDCT], @dct2);
+
+DELTA= 128:-2:1;
+R_TO = zeros(size(DELTA));    R_DCT = R_TO;
+D_TO = zeros(size(DELTA));    D_DCT = D_TO;
+PSNR_TO = zeros(size(DELTA)); PSNR_DCT = PSNR_TO;
+for iDelta = 1:numel(DELTA),
+    delta = DELTA(iDelta);   
+    
+    % TO 
+    TOQ = qu_dz(X_TO, delta) ;
+    h = hist(TOQ(:), min(TOQ(:)):max(TOQ(:)));    
+    pmf = h/sum(h);
+    R_TO(iDelta) = pmfEntr(pmf); 
+    D_TO(iDelta)=  mean( (X_TO(:)-TOQ(:)).^2  );
+    PSNR_TO(iDelta) = 10*log10(dyn^2/ D_TO(iDelta));
+    
+    % TCD
+    TCDQ = qu_dz(T_DCT, delta) ;
+    h = hist(TCDQ(:), min(TCDQ(:)):max(TCDQ(:)));    
+    pmf = h/sum(h);
+    R_DCT(iDelta) = pmfEntr(pmf); 
+    D_DCT(iDelta)=  mean( (T_DCT(:)-TCDQ(:)).^2   );
+    PSNR_DCT(iDelta) = 10*log10(dyn^2/ D_DCT(iDelta));
+end
+
+%%
+figure; plot(R_DCT,PSNR_DCT, R_TO,PSNR_TO, 'linewidth', 2)
+xlabel('Rate - bpp'); ylabel('PSNR - dB');  
+legend('TDC','TO','Location', 'SouthEast'); 
+
+%% Comparaison TO/ TCD
+% La performance des deux transformées est similaire, mais le PSNR obtenu
+% avec la transformée TDC est un peu plus élévé que celui obtenu avec la
+% transformée en ondelettes quand on augmente le bpp (même en augmentant le
+% nombre de moments nuls du filtre et le nombre de niveaux de décomposition). 
+
+%%  PSNRs
+nPoints = 50;
+r = linspace(max([min(R_DCT),min(R_TO)]), min([max(R_DCT),max(R_TO)]), nPoints);
+p1 = interp1(R_DCT,PSNR_DCT,r);
+p2 = interp1(R_TO,PSNR_TO,r);
+figure; plot(r, p2-p1, 'linewidth', 2)
+xlabel('Rate - bpp'); ylabel('\Delta PSNR - dB');  legend('PSNR_{TO}-PSNR_{TCD}'); 
+line ([0 4],[0 0]);
+axis([0 max(r)*1.05 min(p2-p1)-0.02 max(p2-p1)+0.02])
+
+%% Différence entre les 2 PSNR
+% On crée un vecteur r avec 50 points également espacés entre le maximum des minimums et le minimum
+% des maximums de R_DCT et R_TO pour interpoler les PSNR (cela c'est pour qu'il existe pour des valeurs
+% de bit rate pour les deux transformées à la fois). Quand on calcule la différence, on
+% constate qu'elle tend vers zero quand le bpp augmente.
+
+##### SOURCE END #####
+--></body></html>

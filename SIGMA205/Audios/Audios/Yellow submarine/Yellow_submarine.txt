@@ -1,0 +1,5 @@
+max = 
+min = 
+mean =
+
+rq : pas mal de conflit 111bpm officiel

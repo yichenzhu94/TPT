@@ -1,0 +1,5 @@
+max = 135,13
+min = 111,94
+mean = 124,78
+
+rq : un peu ralenti par rapport à l'original ?

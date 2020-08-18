@@ -1,0 +1,5 @@
+max = 208,33
+min = 89,28
+mean = 179,11
+
+rq : pas mal de conflit avec le critère de 0,5

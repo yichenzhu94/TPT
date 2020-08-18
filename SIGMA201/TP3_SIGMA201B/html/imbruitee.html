@@ -1,0 +1,711 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>TP3- SIGMA 201B- D&Eacute;BRUITAGE</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-01-26"><meta name="DC.source" content="imbruitee.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>TP3- SIGMA 201B- D&Eacute;BRUITAGE</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Charger une image</a></li><li><a href="#3">Cr&eacute;ation du filtre et calcul de la transform&eacute;e en Ondelettes</a></li><li><a href="#4">Histogrammes des bruits</a></li><li><a href="#5">Commentaire</a></li><li><a href="#6">SNR dans les sousbandes et dans l'image original</a></li><li><a href="#7">Commentaire</a></li><li><a href="#8">D&eacute;bruitage- Seuillage SOFT</a></li><li><a href="#9">D&eacute;bruitage- Seuillage HARD</a></li><li><a href="#10">Seuillage SURE</a></li><li><a href="#11">Filtrage de Wiener</a></li><li><a href="#12">Comparison entre les seuillages</a></li><li><a href="#13">Commentaire</a></li><li><a href="#14">Performance des m&eacute;thodes en utilisant un &eacute;cart-type estim&eacute;</a></li><li><a href="#15">Commentaire</a></li></ul></div><pre class="codeinput">close <span class="string">all</span>;   clear
+</pre><h2>Charger une image<a name="2"></a></h2><pre class="codeinput">x= double(imread(<span class="string">'lena.pgm'</span>));
+sz=size(x);
+bruit= 30*randn(sz);
+xb=x+bruit;
+
+<span class="comment">%Affichage</span>
+
+figure();
+subplot(1,2,1)
+image(uint8(x)); axis <span class="string">image</span>; colormap(gray(256)); axis <span class="string">off</span>;
+title(<span class="string">'Image original'</span>)
+subplot(1,2,2);
+image(uint8(xb)); axis <span class="string">image</span>; colormap(gray(256)); axis <span class="string">off</span>;
+title(<span class="string">'Image bruit&eacute;e'</span>)
+</pre><img vspace="5" hspace="5" src="imbruitee_01.png" alt=""> <h2>Cr&eacute;ation du filtre et calcul de la transform&eacute;e en Ondelettes<a name="3"></a></h2><pre class="codeinput">qmf = MakeONFilter(<span class="string">'Daubechies'</span>, 8);
+
+<span class="comment">% Calcul de la transform&eacute;e en ondelette discrete (p&eacute;riodisation)</span>
+nDecLev = 4; <span class="comment">% Nombre de niveaux de d&eacute;composition</span>
+imSizeLog = log2(size(x,1));
+X_TO = FWT2_PO(x,imSizeLog-nDecLev,qmf); <span class="comment">% L=imSizeLog-nDecLev; dans ce cas, L vaut 5.</span>
+X_TB = FWT2_PO(xb,imSizeLog-nDecLev,qmf);
+
+<span class="comment">% Affichage transform&eacute;e en ondelettes image original</span>
+figure()
+wt_view(X_TO, nDecLev);
+title(sprintf(<span class="string">'Decomposition sur %d niveaux, remise &agrave; l&acute;&eacute;chelle des sous-bandes: original'</span>,nDecLev));
+
+<span class="comment">% Affichage transform&eacute;e en ondelettes image bruit&eacute;e</span>
+figure(); wt_view(X_TB, nDecLev);
+title(sprintf(<span class="string">'Decomposition sur %d niveaux, remise &agrave; l&acute;&eacute;chelle des sous-bandes: bruit&eacute;e'</span>,nDecLev));
+
+<span class="comment">% Affichage avec &eacute;chelle globale</span>
+figure() ; imagesc(log10(abs(X_TO)+1)); axis <span class="string">image</span>; axis <span class="string">off</span>; colorbar;
+title(sprintf(<span class="string">'Decomposition sur %d niveaux, &eacute;chelle log unique image original'</span>,nDecLev));
+
+<span class="comment">% Affichage avec &eacute;chelle globale</span>
+figure(); imagesc(log10(abs(X_TB)+1)); axis <span class="string">image</span>; axis <span class="string">off</span>; colorbar;
+title(sprintf(<span class="string">'Decomposition sur %d niveaux, &eacute;chelle log unique image bruit&eacute;e'</span>,nDecLev));
+</pre><img vspace="5" hspace="5" src="imbruitee_02.png" alt=""> <img vspace="5" hspace="5" src="imbruitee_03.png" alt=""> <img vspace="5" hspace="5" src="imbruitee_04.png" alt=""> <img vspace="5" hspace="5" src="imbruitee_05.png" alt=""> <h2>Histogrammes des bruits<a name="4"></a></h2><pre class="codeinput">figure()
+histogram(bruit(:)) <span class="comment">%Histogramme du bruit ajout&eacute;</span>
+title(<span class="string">'Histogramme du bruit spatiale'</span>);
+bruitTO=X_TB-X_TO;
+moyenBT=mean(bruitTO(:));
+ecartBT=std(bruitTO(:));
+figure()
+histogram(bruitTO(:))
+title(<span class="string">'Histogramme du bruit affectant les coefficients d&acute;ondelettes'</span>);
+</pre><img vspace="5" hspace="5" src="imbruitee_06.png" alt=""> <img vspace="5" hspace="5" src="imbruitee_07.png" alt=""> <h2>Commentaire<a name="5"></a></h2><p>On observe que les deux histogrammes correspondent &agrave; la m&ecirc;me distribution. C'est &agrave; dire, apr&egrave;s transformation, le bruit reste gaussien de moyenne nulle et &eacute;cart-type de 30 environ (on l'a v&eacute;rifi&eacute; en calculant la moyenne et l'&eacute;cart type empiriques de l'image transform&eacute;e). Cela peut s'expliquer &agrave; partir du fait que la transformation en ondelettes est une transformation orthogonale, et donc pr&eacute;serve les propiet&eacute;s du signal original.</p><h2>SNR dans les sousbandes et dans l'image original<a name="6"></a></h2><pre class="codeinput"><span class="keyword">for</span> i=1:3*nDecLev+1
+
+    sousbO = getsb(X_TO, i, nDecLev);
+    sousbB= getsb(X_TB, i, nDecLev);
+    bruit=sousbB-sousbO;
+    varb=var(bruit(:));
+    coeffim2=sousbB.^2;
+    SNR(i)=10*log10(mean(coeffim2(:))/varb);
+
+<span class="keyword">end</span>
+
+disp(<span class="string">'Le SNR qu&acute;on obtient pour chaque sous bande c&acute;est:'</span>)
+
+SNR
+
+coeffim2=xb.^2;
+varb=var(xb(:));
+SNRspatial=10*log10(mean(coeffim2(:))/varb);
+
+disp(<span class="string">'Le SNR qu&acute;on obtient pour l''image c''est:'</span>)
+SNRspatial
+</pre><pre class="codeoutput">Le SNR qu&acute;on obtient pour chaque sous bande c&acute;est:
+
+SNR =
+
+  Columns 1 through 7
+
+   36.8012   10.7335   15.6601    9.7303    4.2858    7.9003    3.5548
+
+  Columns 8 through 13
+
+    0.9510    2.1546    0.5645    0.1143    0.3035    0.0497
+
+Le SNR qu&acute;on obtient pour l'image c'est:
+
+SNRspatial =
+
+    7.6205
+
+</pre><h2>Commentaire<a name="7"></a></h2><p>On constate que le SNR (exprim&eacute; en dB) diminue en augmentant la sousbande d'approximation et tend vers zero. Cela implique que le rapport signal sur bruit tends vers 1: en augmentant les sousbandes d'approximation, il y a un grand nombre de coefficients qui deviennent zero, et il ne reste que du bruit dans la sousbande. C'est pour ce que la puissance de l'image contenue dans la sousbande et du bruit deviennent &eacute;gales.</p><p>Par rapport au SNR de l'image, on constate que celui dans les premi&egrave;res sousbandes d'approximation est plus &eacute;l&eacute;v&eacute;e.</p><h2>D&eacute;bruitage- Seuillage SOFT<a name="8"></a></h2><pre class="codeinput">jmax=nDecLev;
+K= imSizeLog;
+Km= K*(1-4^(-jmax));
+
+seuilU=30*sqrt(2*log(Km));
+
+imThreshT=SoftThresh(X_TB, seuilU);
+
+approximation=getsb(X_TB, 1, nDecLev);
+
+<span class="keyword">for</span> i=1:size(approximation,1);
+    <span class="keyword">for</span> j=1:size(approximation,2);
+        imThreshT(i,j)=approximation(i,j);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+
+imdebruiteeS=IWT2_PO(imThreshT,imSizeLog-nDecLev,qmf);
+
+<span class="comment">% figure(); wt_view(imThreshT, nDecLev);</span>
+figure(); image(uint8(imdebruiteeS)); axis <span class="string">image</span>; colormap(gray(256)); axis <span class="string">off</span>;
+title(<span class="string">'Seuillage doux'</span>);
+
+EQMS=mean((x(:)-imdebruiteeS(:)).^2);
+disp(<span class="string">'L''erreur quadratique moyen qu''on obtient c''est'</span>)
+EQMS
+</pre><pre class="codeoutput">L'erreur quadratique moyen qu'on obtient c'est
+
+EQMS =
+
+  132.9633
+
+</pre><img vspace="5" hspace="5" src="imbruitee_08.png" alt=""> <h2>D&eacute;bruitage- Seuillage HARD<a name="9"></a></h2><pre class="codeinput">imThreshT=HardThresh(X_TB, seuilU);
+
+approximation=getsb(X_TB, 1, nDecLev);
+
+<span class="keyword">for</span> i=1:size(approximation,1);
+    <span class="keyword">for</span> j=1:size(approximation,2);
+        imThreshT(i,j)=approximation(i,j);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+imdebruiteeH=IWT2_PO(imThreshT,imSizeLog-nDecLev,qmf);
+
+<span class="comment">% figure(); wt_view(imThreshT, nDecLev);</span>
+figure(); image(uint8(imdebruiteeH)); axis <span class="string">image</span>; colormap(gray(256)); axis <span class="string">off</span>;
+title(<span class="string">'Seuillage dur'</span>);
+
+EQMH=mean((x(:)-imdebruiteeH(:)).^2);
+disp(<span class="string">'L''erreur quadratique moyen qu''on obtient c''est %d'</span>)
+EQMH
+</pre><pre class="codeoutput">L'erreur quadratique moyen qu'on obtient c'est %d
+
+EQMH =
+
+  290.0686
+
+</pre><img vspace="5" hspace="5" src="imbruitee_09.png" alt=""> <h2>Seuillage SURE<a name="10"></a></h2><pre class="codeinput">y=(1/30)*X_TB;
+
+imThreshT1=HybridThresh(y(:)');
+imThreshT=reshape(imThreshT1, size(x));
+
+approximation=getsb(y, 1, nDecLev);
+
+<span class="keyword">for</span> i=1:size(approximation,1);
+    <span class="keyword">for</span> j=1:size(approximation,2);
+        imThreshT(i,j)=approximation(i,j);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+imdebruiteeSU=IWT2_PO(30*imThreshT,imSizeLog-nDecLev,qmf);
+
+<span class="comment">% figure(); wt_view(imThreshT, nDecLev);</span>
+figure(); image(uint8(imdebruiteeSU)); axis <span class="string">image</span>; colormap(gray(256)); axis <span class="string">off</span>;
+title(<span class="string">'Seuillage SURE'</span>);
+
+EQMSU=mean((x(:)-imdebruiteeSU(:)).^2);
+disp(<span class="string">'L''erreur quadratique moyen qu''on obtient c''est'</span>)
+EQMSU
+</pre><pre class="codeoutput">L'erreur quadratique moyen qu'on obtient c'est
+
+EQMSU =
+
+  128.1678
+
+</pre><img vspace="5" hspace="5" src="imbruitee_10.png" alt=""> <h2>Filtrage de Wiener<a name="11"></a></h2><pre class="codeinput">imdebruiteeW= wiener2d(xb, 30);
+
+EQMSW=mean((x(:)-imdebruiteeW(:)).^2);
+disp(<span class="string">'L''erreur quadratique moyen qu''on obtient c''est'</span>)
+EQMSW
+</pre><pre class="codeoutput">L'erreur quadratique moyen qu'on obtient c'est
+
+EQMSW =
+
+  276.1079
+
+</pre><h2>Comparison entre les seuillages<a name="12"></a></h2><pre class="codeinput">figure()
+subplot(2,2,1)
+image(uint8(imdebruiteeS)); axis <span class="string">image</span>; colormap(gray(256)); axis <span class="string">off</span>;
+title(<span class="string">'Seuillage SOFT'</span>);
+subplot(2,2,2);
+image(uint8(imdebruiteeH)); axis <span class="string">image</span>; colormap(gray(256)); axis <span class="string">off</span>;
+title(<span class="string">'Seuillage HARD'</span>);
+subplot(2,2,3)
+image(uint8(imdebruiteeSU)); axis <span class="string">image</span>; colormap(gray(256)); axis <span class="string">off</span>;
+title(<span class="string">'Seuillage SURE'</span>);
+subplot(2,2,4)
+image(uint8(imdebruiteeW)); axis <span class="string">image</span>; colormap(gray(256)); axis <span class="string">off</span>;
+title(<span class="string">'Filtrage Wiener'</span>);
+</pre><img vspace="5" hspace="5" src="imbruitee_11.png" alt=""> <h2>Commentaire<a name="13"></a></h2><pre class="codeinput"><span class="comment">% Par rapport aux autres m&eacute;thodes de d&eacute;bruitage, c'est le seuillage dur</span>
+<span class="comment">% celui qui a l'erreur quadratique moyen le plus haut, et celui qui</span>
+<span class="comment">% pr&eacute;serve plus le bruit en terms visuels. La m&eacute;thode qui a la meilleure</span>
+<span class="comment">% performance c'est cela qui utilise le seuillage SURE pour faire le</span>
+<span class="comment">% d&eacute;bruitage, car on obtient en l'appliqant l'erreur quadratique moyen le</span>
+<span class="comment">% plus bas.</span>
+
+<span class="comment">% La seule m&eacute;thode qui a une performance plus faible que cela du filtrage</span>
+<span class="comment">% de Weiner c'est le seuillage dur (en terms visuels et d'erreur</span>
+<span class="comment">% quadratique moyen aussi).</span>
+</pre><h2>Performance des m&eacute;thodes en utilisant un &eacute;cart-type estim&eacute;<a name="14"></a></h2><pre class="codeinput">plusfinesb=getsb(X_TB, 3*nDecLev+1, nDecLev);
+
+sigma=(1/0.6745)*median(abs(plusfinesb(:)));
+<span class="comment">% sigma=std(x(:));</span>
+
+seuilU=sigma*sqrt(2*log(Km));
+
+imThreshT=SoftThresh(X_TB, seuilU);
+
+approximation=getsb(X_TB, 1, nDecLev);
+
+<span class="keyword">for</span> i=1:size(approximation,1);
+    <span class="keyword">for</span> j=1:size(approximation,2);
+        imThreshT(i,j)=approximation(i,j);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+
+imdebruiteeS=IWT2_PO(imThreshT,imSizeLog-nDecLev,qmf);
+
+<span class="comment">% figure(); wt_view(imThreshT, nDecLev);</span>
+figure(); image(uint8(imdebruiteeS)); axis <span class="string">image</span>; colormap(gray(256)); axis <span class="string">off</span>;
+title(<span class="string">'Seuillage doux'</span>);
+
+EQMS=mean((x(:)-imdebruiteeS(:)).^2);
+disp(<span class="string">'L''erreur quadratique moyen qu''on obtient avec le seuillage doux c''est'</span>)
+EQMS
+
+<span class="comment">% D&eacute;bruitage- Seuillage HARD</span>
+
+imThreshT=HardThresh(X_TB, seuilU);
+
+approximation=getsb(X_TB, 1, nDecLev);
+
+<span class="keyword">for</span> i=1:size(approximation,1);
+    <span class="keyword">for</span> j=1:size(approximation,2);
+        imThreshT(i,j)=approximation(i,j);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+imdebruiteeH=IWT2_PO(imThreshT,imSizeLog-nDecLev,qmf);
+
+<span class="comment">% figure(); wt_view(imThreshT, nDecLev);</span>
+figure(); image(uint8(imdebruiteeH)); axis <span class="string">image</span>; colormap(gray(256)); axis <span class="string">off</span>;
+title(<span class="string">'Seuillage dur'</span>);
+
+EQMH=mean((x(:)-imdebruiteeH(:)).^2);
+disp(<span class="string">'L''erreur quadratique moyen qu''on obtient avec le seuillage dur c''est %d'</span>)
+EQMH
+
+
+<span class="comment">% Seuillage SURE</span>
+
+y=(1/sigma)*X_TB;
+
+imThreshT1=HybridThresh(y(:)');
+imThreshT=reshape(imThreshT1, size(x));
+
+approximation=getsb(y, 1, nDecLev);
+
+<span class="keyword">for</span> i=1:size(approximation,1);
+    <span class="keyword">for</span> j=1:size(approximation,2);
+        imThreshT(i,j)=approximation(i,j);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+imdebruiteeSU=IWT2_PO(sigma*imThreshT,imSizeLog-nDecLev,qmf);
+
+<span class="comment">% figure(); wt_view(imThreshT, nDecLev);</span>
+figure(); image(uint8(imdebruiteeSU)); axis <span class="string">image</span>; colormap(gray(256)); axis <span class="string">off</span>;
+title(<span class="string">'Seuillage SURE'</span>);
+
+EQMSU=mean((x(:)-imdebruiteeSU(:)).^2);
+disp(<span class="string">'L''erreur quadratique moyen qu''on obtient avec le seuillage SURE c''est'</span>)
+EQMSU
+
+<span class="comment">%Wiener</span>
+
+imdebruiteeW= wiener2d(xb, sigma);
+
+EQMSW=mean((x(:)-imdebruiteeW(:)).^2);
+disp(<span class="string">'L''erreur quadratique moyen qu''on obtient c''est'</span>)
+EQMSW
+
+figure(); image(uint8(imdebruiteeW)); axis <span class="string">image</span>; colormap(gray(256)); axis <span class="string">off</span>;
+title(<span class="string">'Filtrage Wiener'</span>);
+</pre><pre class="codeoutput">L'erreur quadratique moyen qu'on obtient avec le seuillage doux c'est
+
+EQMS =
+
+  133.2951
+
+L'erreur quadratique moyen qu'on obtient avec le seuillage dur c'est %d
+
+EQMH =
+
+  286.6336
+
+L'erreur quadratique moyen qu'on obtient avec le seuillage SURE c'est
+
+EQMSU =
+
+  128.0735
+
+L'erreur quadratique moyen qu'on obtient c'est
+
+EQMSW =
+
+  273.5584
+
+</pre><img vspace="5" hspace="5" src="imbruitee_12.png" alt=""> <img vspace="5" hspace="5" src="imbruitee_13.png" alt=""> <img vspace="5" hspace="5" src="imbruitee_14.png" alt=""> <img vspace="5" hspace="5" src="imbruitee_15.png" alt=""> <h2>Commentaire<a name="15"></a></h2><p>Dans la section pr&eacute;cedante on a utilis&eacute; l'estimateur de l'&eacute;cart-type bas&eacute; sur la m&eacute;diane; en r&eacute;gardant la valeur de l'&eacute;cart-type estim&eacute;, on constate que cette valeur es raisonablement proche &agrave; celui du vrai &eacute;cart-type, et pour cette raison la performance des m&eacute;thodes de d&eacute;bruitage en utilisant l'&eacute;cart type estim&eacute; est bien proche &agrave; cela o&ugrave; on avait utilis&eacute; la connaisance du vrai &eacute;cart type (en terms visuels et en terms d'erreur quadratique moyen).</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% TP3- SIGMA 201B- DÉBRUITAGE
+
+%% 
+close all;   clear
+
+%% Charger une image 
+
+x= double(imread('lena.pgm'));
+sz=size(x);
+bruit= 30*randn(sz);
+xb=x+bruit;
+
+%Affichage
+
+figure(); 
+subplot(1,2,1)
+image(uint8(x)); axis image; colormap(gray(256)); axis off;
+title('Image original')
+subplot(1,2,2);
+image(uint8(xb)); axis image; colormap(gray(256)); axis off; 
+title('Image bruitée')
+
+
+%%  Création du filtre et calcul de la transformée en Ondelettes 
+
+qmf = MakeONFilter('Daubechies', 8);
+
+% Calcul de la transformée en ondelette discrete (périodisation)
+nDecLev = 4; % Nombre de niveaux de décomposition 
+imSizeLog = log2(size(x,1)); 
+X_TO = FWT2_PO(x,imSizeLog-nDecLev,qmf); % L=imSizeLog-nDecLev; dans ce cas, L vaut 5. 
+X_TB = FWT2_PO(xb,imSizeLog-nDecLev,qmf);
+
+% Affichage transformée en ondelettes image original
+figure()
+wt_view(X_TO, nDecLev);
+title(sprintf('Decomposition sur %d niveaux, remise à l´échelle des sous-bandes: original',nDecLev));
+
+% Affichage transformée en ondelettes image bruitée
+figure(); wt_view(X_TB, nDecLev);
+title(sprintf('Decomposition sur %d niveaux, remise à l´échelle des sous-bandes: bruitée',nDecLev));
+
+% Affichage avec échelle globale 
+figure() ; imagesc(log10(abs(X_TO)+1)); axis image; axis off; colorbar;
+title(sprintf('Decomposition sur %d niveaux, échelle log unique image original',nDecLev));
+
+% Affichage avec échelle globale 
+figure(); imagesc(log10(abs(X_TB)+1)); axis image; axis off; colorbar;
+title(sprintf('Decomposition sur %d niveaux, échelle log unique image bruitée',nDecLev));
+
+
+%% Histogrammes des bruits
+
+figure()
+histogram(bruit(:)) %Histogramme du bruit ajouté
+title('Histogramme du bruit spatiale');
+bruitTO=X_TB-X_TO;
+moyenBT=mean(bruitTO(:));
+ecartBT=std(bruitTO(:));
+figure()
+histogram(bruitTO(:))
+title('Histogramme du bruit affectant les coefficients d´ondelettes');
+
+%% Commentaire
+% On observe que les deux histogrammes correspondent à la même
+% distribution. C'est à dire, après transformation, le bruit reste gaussien
+% de moyenne nulle et écart-type de 30 environ (on l'a vérifié en calculant 
+% la moyenne et l'écart type empiriques de l'image transformée). Cela peut s'expliquer à
+% partir du fait que la transformation en ondelettes est une transformation
+% orthogonale, et donc préserve les propietés du signal original. 
+
+%% SNR dans les sousbandes et dans l'image original
+
+for i=1:3*nDecLev+1
+    
+    sousbO = getsb(X_TO, i, nDecLev);
+    sousbB= getsb(X_TB, i, nDecLev);
+    bruit=sousbB-sousbO;
+    varb=var(bruit(:));
+    coeffim2=sousbB.^2;
+    SNR(i)=10*log10(mean(coeffim2(:))/varb);
+    
+end
+
+disp('Le SNR qu´on obtient pour chaque sous bande c´est:')
+
+SNR
+
+coeffim2=xb.^2;
+varb=var(xb(:));
+SNRspatial=10*log10(mean(coeffim2(:))/varb);
+
+disp('Le SNR qu´on obtient pour l''image c''est:')
+SNRspatial
+
+
+%% Commentaire
+% On constate que le SNR (exprimé en dB) diminue en augmentant la sousbande
+% d'approximation et tend vers zero. Cela implique que le rapport signal
+% sur bruit tends vers 1: en augmentant les sousbandes d'approximation, il
+% y a un grand nombre de coefficients qui deviennent zero, et il ne reste que du bruit dans la sousbande. C'est pour ce que 
+% la puissance de l'image contenue dans la sousbande et du bruit deviennent égales. 
+% 
+% Par rapport au SNR de l'image, on constate que celui dans les premières
+% sousbandes d'approximation est plus élévée. 
+%% Débruitage- Seuillage SOFT
+
+jmax=nDecLev;
+K= imSizeLog;
+Km= K*(1-4^(-jmax));
+
+seuilU=30*sqrt(2*log(Km));
+
+imThreshT=SoftThresh(X_TB, seuilU);
+
+approximation=getsb(X_TB, 1, nDecLev);
+
+for i=1:size(approximation,1);
+    for j=1:size(approximation,2);
+        imThreshT(i,j)=approximation(i,j);
+    end
+end
+
+
+imdebruiteeS=IWT2_PO(imThreshT,imSizeLog-nDecLev,qmf);
+
+% figure(); wt_view(imThreshT, nDecLev);
+figure(); image(uint8(imdebruiteeS)); axis image; colormap(gray(256)); axis off; 
+title('Seuillage doux');
+
+EQMS=mean((x(:)-imdebruiteeS(:)).^2);
+disp('L''erreur quadratique moyen qu''on obtient c''est')
+EQMS
+
+%% Débruitage- Seuillage HARD
+
+imThreshT=HardThresh(X_TB, seuilU);
+
+approximation=getsb(X_TB, 1, nDecLev);
+
+for i=1:size(approximation,1);
+    for j=1:size(approximation,2);
+        imThreshT(i,j)=approximation(i,j);
+    end
+end
+
+imdebruiteeH=IWT2_PO(imThreshT,imSizeLog-nDecLev,qmf);
+
+% figure(); wt_view(imThreshT, nDecLev); 
+figure(); image(uint8(imdebruiteeH)); axis image; colormap(gray(256)); axis off; 
+title('Seuillage dur');
+
+EQMH=mean((x(:)-imdebruiteeH(:)).^2);
+disp('L''erreur quadratique moyen qu''on obtient c''est %d')
+EQMH
+
+
+%% Seuillage SURE
+
+y=(1/30)*X_TB;        
+
+imThreshT1=HybridThresh(y(:)');
+imThreshT=reshape(imThreshT1, size(x));
+
+approximation=getsb(y, 1, nDecLev);
+
+for i=1:size(approximation,1);
+    for j=1:size(approximation,2);
+        imThreshT(i,j)=approximation(i,j);
+    end
+end
+
+imdebruiteeSU=IWT2_PO(30*imThreshT,imSizeLog-nDecLev,qmf);
+
+% figure(); wt_view(imThreshT, nDecLev); 
+figure(); image(uint8(imdebruiteeSU)); axis image; colormap(gray(256)); axis off; 
+title('Seuillage SURE');
+
+EQMSU=mean((x(:)-imdebruiteeSU(:)).^2);
+disp('L''erreur quadratique moyen qu''on obtient c''est')
+EQMSU
+
+%% Filtrage de Wiener
+
+imdebruiteeW= wiener2d(xb, 30);
+
+EQMSW=mean((x(:)-imdebruiteeW(:)).^2);
+disp('L''erreur quadratique moyen qu''on obtient c''est')
+EQMSW
+
+%% Comparison entre les seuillages
+
+figure()
+subplot(2,2,1)
+image(uint8(imdebruiteeS)); axis image; colormap(gray(256)); axis off; 
+title('Seuillage SOFT');
+subplot(2,2,2);
+image(uint8(imdebruiteeH)); axis image; colormap(gray(256)); axis off; 
+title('Seuillage HARD');
+subplot(2,2,3)
+image(uint8(imdebruiteeSU)); axis image; colormap(gray(256)); axis off; 
+title('Seuillage SURE');
+subplot(2,2,4)
+image(uint8(imdebruiteeW)); axis image; colormap(gray(256)); axis off; 
+title('Filtrage Wiener');
+
+%% Commentaire
+
+% Par rapport aux autres méthodes de débruitage, c'est le seuillage dur
+% celui qui a l'erreur quadratique moyen le plus haut, et celui qui
+% préserve plus le bruit en terms visuels. La méthode qui a la meilleure
+% performance c'est cela qui utilise le seuillage SURE pour faire le
+% débruitage, car on obtient en l'appliqant l'erreur quadratique moyen le
+% plus bas. 
+
+% La seule méthode qui a une performance plus faible que cela du filtrage
+% de Weiner c'est le seuillage dur (en terms visuels et d'erreur
+% quadratique moyen aussi). 
+
+%% Performance des méthodes en utilisant un écart-type estimé
+
+plusfinesb=getsb(X_TB, 3*nDecLev+1, nDecLev);
+
+sigma=(1/0.6745)*median(abs(plusfinesb(:)));
+% sigma=std(x(:));
+
+seuilU=sigma*sqrt(2*log(Km));
+
+imThreshT=SoftThresh(X_TB, seuilU);
+
+approximation=getsb(X_TB, 1, nDecLev);
+
+for i=1:size(approximation,1);
+    for j=1:size(approximation,2);
+        imThreshT(i,j)=approximation(i,j);
+    end
+end
+
+
+imdebruiteeS=IWT2_PO(imThreshT,imSizeLog-nDecLev,qmf);
+
+% figure(); wt_view(imThreshT, nDecLev);
+figure(); image(uint8(imdebruiteeS)); axis image; colormap(gray(256)); axis off; 
+title('Seuillage doux');
+
+EQMS=mean((x(:)-imdebruiteeS(:)).^2);
+disp('L''erreur quadratique moyen qu''on obtient avec le seuillage doux c''est')
+EQMS
+
+% Débruitage- Seuillage HARD
+
+imThreshT=HardThresh(X_TB, seuilU);
+
+approximation=getsb(X_TB, 1, nDecLev);
+
+for i=1:size(approximation,1);
+    for j=1:size(approximation,2);
+        imThreshT(i,j)=approximation(i,j);
+    end
+end
+
+imdebruiteeH=IWT2_PO(imThreshT,imSizeLog-nDecLev,qmf);
+
+% figure(); wt_view(imThreshT, nDecLev); 
+figure(); image(uint8(imdebruiteeH)); axis image; colormap(gray(256)); axis off; 
+title('Seuillage dur');
+
+EQMH=mean((x(:)-imdebruiteeH(:)).^2);
+disp('L''erreur quadratique moyen qu''on obtient avec le seuillage dur c''est %d')
+EQMH
+
+
+% Seuillage SURE
+
+y=(1/sigma)*X_TB;        
+
+imThreshT1=HybridThresh(y(:)');
+imThreshT=reshape(imThreshT1, size(x));
+
+approximation=getsb(y, 1, nDecLev);
+
+for i=1:size(approximation,1);
+    for j=1:size(approximation,2);
+        imThreshT(i,j)=approximation(i,j);
+    end
+end
+
+imdebruiteeSU=IWT2_PO(sigma*imThreshT,imSizeLog-nDecLev,qmf);
+
+% figure(); wt_view(imThreshT, nDecLev); 
+figure(); image(uint8(imdebruiteeSU)); axis image; colormap(gray(256)); axis off; 
+title('Seuillage SURE');
+
+EQMSU=mean((x(:)-imdebruiteeSU(:)).^2);
+disp('L''erreur quadratique moyen qu''on obtient avec le seuillage SURE c''est')
+EQMSU
+
+%Wiener
+
+imdebruiteeW= wiener2d(xb, sigma);
+
+EQMSW=mean((x(:)-imdebruiteeW(:)).^2);
+disp('L''erreur quadratique moyen qu''on obtient c''est')
+EQMSW
+
+figure(); image(uint8(imdebruiteeW)); axis image; colormap(gray(256)); axis off; 
+title('Filtrage Wiener');
+
+
+
+%% Commentaire
+% Dans la section précedante on a utilisé l'estimateur de l'écart-type basé sur la médiane;
+% en régardant la valeur de l'écart-type estimé, on constate que cette
+% valeur es raisonablement proche à celui du vrai écart-type, et pour cette
+% raison la performance des méthodes de débruitage en utilisant l'écart
+% type estimé est bien proche à cela où on avait utilisé la
+% connaisance du vrai écart type (en terms visuels et en terms d'erreur
+% quadratique moyen). 
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>
